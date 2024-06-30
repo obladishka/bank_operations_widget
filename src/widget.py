@@ -11,3 +11,9 @@ def mask_account_card(account_card_info: str) -> str:
         masked_info = get_mask_card_number(info_list[-1])
 
     return " ".join(info_list[:-1]) + " " + masked_info
+
+
+def get_data(my_date: str) -> str:
+    """Function for date formating."""
+    formated_date: list[str] = my_date[:10].split("-")
+    return ".".join(formated_date[::-1])
