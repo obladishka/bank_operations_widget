@@ -22,4 +22,10 @@ def get_mask_card_number(card_number: str | int, slots: int = 4) -> str:
 
 def get_mask_account(account: int | str) -> str:
     """Function that masks account number."""
-    return "**" + str(account)[-4:]
+    if account:
+        if len(str(account)) < 6 or len(str(account)) > 22:
+            raise ValueError("Account should be between 6 and 22 digits")
+        else:
+            return "**" + str(account)[-4:]
+    else:
+        return "Account number can't be empty"
