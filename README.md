@@ -76,3 +76,15 @@ To see operations in ascending order, transmit a second parameter `parameter="Fa
    {'id': 939719570, 'state': 'EXECUTED', 'date': '2018-06-30T02:08:58.425572'}
    ]
    ```
+
+## Testing
+
+The project is tested by 56 different ways which provides 100%-code coverage. 
+Project testing is performed using pytest. To run the tests install pytest in a develop group
+and write a relevant command in your terminal:
+```commandline
+    poetry add --group dev pytest
+    pytest
+```
+To see code coverage statistics install pytest-cov `poetry add --group dev pytest-cov` and enter
+`pytest --cov` in your terminal.
