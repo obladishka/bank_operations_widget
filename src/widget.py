@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from src.masks import get_mask_account, get_mask_card_number
 
 
@@ -23,7 +25,15 @@ def mask_account_card(account_card_info: str) -> str:
             return " ".join(info_list[:-1]) + " " + get_mask_card_number(info_list[-1])
 
 
-def get_data(my_date: str) -> str:
+def get_date(my_date: str) -> str:
     """Function for date formating."""
-    formated_date: list[str] = my_date[:10].split("-")
-    return ".".join(formated_date[::-1])
+    if my_date:
+        try:
+            formated_date = str(datetime.fromisoformat(my_date))[:10].split("-")
+        except ValueError:
+            raise ValueError("Date should be in format YYYY-MM-DD")
+        else:
+            if datetime.fromisoformat(my_date).year < 1900 or datetime.fromisoformat(my_date).year > 2100:
+                return "Date should be between 1900 and 2100 year"
+            return ".".join(formated_date[::-1])
+    return "Date can't be empty"
