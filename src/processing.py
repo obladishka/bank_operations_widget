@@ -1,7 +1,9 @@
 def filter_by_state(
     operations_data: list[dict[str, str | int]], state: str = "EXECUTED"
-) -> list[dict[str, str | int]]:
+) -> list[dict[str, str | int]] | str:
     """Function that filters information by a specified criteria."""
+    if state not in [operation.get("state") for operation in operations_data]:
+        return "State is invalid"
     return [operation for operation in operations_data if operation.get("state") == state]
 
 
