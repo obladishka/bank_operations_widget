@@ -1,4 +1,4 @@
-from src.generators import filter_by_currency
+from src.generators import filter_by_currency, transaction_descriptions
 
 
 def test_filter_by_currency(transactions):
@@ -63,4 +63,43 @@ def test_filter_by_currency_no_currency():
             "to": "Счет 75651667383060284188",
         },
     ]
-    assert filter_by_currency(no_currency_transactions, "USD") == "Transactions currency is not defined"
+    assert filter_by_currency(no_currency_transactions, "USD") == "No transactions in such currency"
+
+
+def test_transaction_descriptions(transactions):
+    descriptions = transaction_descriptions(transactions)
+    assert next(descriptions, "No more transactions") == "Перевод организации"
+    assert next(descriptions, "No more transactions") == "Перевод со счета на счет"
+    assert next(descriptions, "No more transactions") == "Перевод со счета на счет"
+    assert next(descriptions, "No more transactions") == "Перевод с карты на карту"
+    assert next(descriptions, "No more transactions") == "Перевод организации"
+    assert next(descriptions, "No more transactions") == "Перевод организации"
+    assert next(descriptions, "No more transactions") == "Operation description is not defined"
+    assert next(descriptions, "No more transactions") == "No more transactions"
+
+
+def test_transaction_descriptions_no_transactions():
+    assert next(transaction_descriptions([])) == "No transactions found"
+
+
+def test_transaction_descriptions_no_description():
+    no_description_transactions = [
+        {
+            "id": 939719570,
+            "state": "EXECUTED",
+            "date": "2018-06-30T02:08:58.425572",
+            "operationAmount": {"amount": "9824.07", "currency": {"name": "USD", "code": "USD"}},
+            "from": "Счет 75106830613657916952",
+            "to": "Счет 11776614605963066702",
+        },
+        {
+            "id": 142264268,
+            "state": "EXECUTED",
+            "date": "2019-04-04T23:20:05.206878",
+            "operationAmount": {"amount": "79114.93", "currency": {"name": "USD", "code": "USD"}},
+            "from": "Счет 19708645243227258542",
+            "to": "Счет 75651667383060284188",
+        },
+    ]
+    assert next(transaction_descriptions(no_description_transactions)) == "Operation description is not defined"
+    assert next(transaction_descriptions(no_description_transactions)) == "Operation description is not defined"
