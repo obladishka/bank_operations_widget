@@ -1,4 +1,6 @@
-from src.generators import filter_by_currency, transaction_descriptions
+import pytest
+
+from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
 
 
 def test_filter_by_currency(transactions):
@@ -103,3 +105,78 @@ def test_transaction_descriptions_no_description():
     ]
     assert next(transaction_descriptions(no_description_transactions)) == "Operation description is not defined"
     assert next(transaction_descriptions(no_description_transactions)) == "Operation description is not defined"
+
+
+def test_card_number_generator():
+    card_number = card_number_generator(1, 5)
+    assert next(card_number) == "0000 0000 0000 0001"
+    assert next(card_number) == "0000 0000 0000 0002"
+    assert next(card_number) == "0000 0000 0000 0003"
+    assert next(card_number) == "0000 0000 0000 0004"
+    assert next(card_number) == "0000 0000 0000 0005"
+
+
+@pytest.mark.parametrize(
+    "a, b, expected",
+    [
+        (
+            1000,
+            1003,
+            [
+                "0000 0000 0000 1000",
+                "0000 0000 0000 1001",
+                "0000 0000 0000 1002",
+                "0000 0000 0000 1003",
+            ],
+        ),
+        (
+            10000010,
+            10000013,
+            [
+                "0000 0000 1000 0010",
+                "0000 0000 1000 0011",
+                "0000 0000 1000 0012",
+                "0000 0000 1000 0013",
+            ],
+        ),
+        (
+            100000000100,
+            100000000103,
+            [
+                "0000 1000 0000 0100",
+                "0000 1000 0000 0101",
+                "0000 1000 0000 0102",
+                "0000 1000 0000 0103",
+            ],
+        ),
+        (
+            1000000000001000,
+            1000000000001003,
+            [
+                "1000 0000 0000 1000",
+                "1000 0000 0000 1001",
+                "1000 0000 0000 1002",
+                "1000 0000 0000 1003",
+            ],
+        ),
+        (
+            9999999999999996,
+            9999999999999999,
+            [
+                "9999 9999 9999 9996",
+                "9999 9999 9999 9997",
+                "9999 9999 9999 9998",
+                "9999 9999 9999 9999",
+            ],
+        ),
+    ],
+)
+def test_card_number_generator_different_ranges(a, b, expected):
+    result = list(card_number for card_number in card_number_generator(a, b))
+    assert result == expected
+
+
+def test_card_number_generator_extreme_numbers():
+    assert next(card_number_generator(0, 1)) == "Range should be between 1 and 9999999999999999"
+    assert next(card_number_generator(1, 10000000000000000)) == "Range should be between 1 and 9999999999999999"
+    assert next(card_number_generator(1, 0)) == "Min range should be smaller than max range"
