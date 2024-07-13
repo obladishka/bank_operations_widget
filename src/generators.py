@@ -25,14 +25,14 @@ def transaction_descriptions(transactions_list):
         yield description
 
 
-def card_number_generator(a, b):
+def card_number_generator(start, stop):
     """Function that generates cards numbers within specified range."""
     min_number, max_number = 1, 9999999999999999
-    if a > b:
+    if start > stop:
         yield "Min range should be smaller than max range"
-    elif a < min_number or b > max_number:
+    elif start < min_number or stop > max_number:
         yield "Range should be between 1 and 9999999999999999"
 
-    for i in range(a, b + 1):
+    for i in range(start, stop + 1):
         number_str = "{:016}".format(min_number + i - 1)
         yield " ".join([number_str[x : x + 4] for x in range(0, len(number_str), 4)])
