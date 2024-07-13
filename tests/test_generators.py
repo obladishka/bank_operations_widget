@@ -117,7 +117,7 @@ def test_card_number_generator():
 
 
 @pytest.mark.parametrize(
-    "a, b, expected",
+    "start, stop, expected",
     [
         (
             1000,
@@ -171,8 +171,8 @@ def test_card_number_generator():
         ),
     ],
 )
-def test_card_number_generator_different_ranges(a, b, expected):
-    result = list(card_number for card_number in card_number_generator(a, b))
+def test_card_number_generator_different_ranges(start, stop, expected):
+    result = list(card_number for card_number in card_number_generator(start, stop))
     assert result == expected
 
 
