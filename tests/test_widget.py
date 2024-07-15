@@ -4,6 +4,7 @@ from src.widget import get_date, mask_account_card
 
 
 def test_mask_account_card() -> None:
+    """Tests standard cards and accounts numbers masking."""
     assert mask_account_card("Visa Platinum 7000792289606361") == "Visa Platinum 7000 79** **** 6361"
     assert mask_account_card("Счет 73654108430135874305") == "Счет **4305"
 
@@ -20,10 +21,12 @@ def test_mask_account_card() -> None:
     ],
 )
 def test_mask_account_card_nonstandard_number(account_card_number: str, expected: str) -> None:
+    """Tests non-standard cards and accounts numbers masking."""
     assert mask_account_card(account_card_number) == expected
 
 
 def test_mask_account_card_no_number_or_type() -> None:
+    """Tests masking function when card/account name or number are missing."""
     assert mask_account_card("Счет") == "Account number can't be empty"
     assert mask_account_card("Visa Platinum") == "Card number can't be empty"
     assert mask_account_card("159683785199") == "Type (account or card) can't be empty"
@@ -39,11 +42,13 @@ def test_mask_account_card_no_number_or_type() -> None:
     ],
 )
 def test_mask_account_card_wrong_number(account_card_number: str) -> None:
+    """Tests masking function with wrong card/account numbers."""
     with pytest.raises(ValueError):
         mask_account_card(account_card_number)
 
 
 def test_get_date() -> None:
+    """Tests standard date formating."""
     assert get_date("2024-03-11T02:26:18.671407") == "11.03.2024"
 
 
@@ -61,15 +66,18 @@ def test_get_date() -> None:
     ],
 )
 def test_get_date_different_formats(my_date: str, expected: str) -> None:
+    """Tests different ISO-standard date formating."""
     assert get_date(my_date) == expected
 
 
 def test_get_date_no_date() -> None:
+    """Tests date adequacy."""
     assert get_date("18990809T183142") == "Date should be between 1900 and 2100 year"
     assert get_date("21010809T183142") == "Date should be between 1900 and 2100 year"
 
 
 def test_get_date_wrong_date() -> None:
+    """Tests date formating function when no date is transmitted."""
     assert get_date("") == "Date can't be empty"
 
 
@@ -82,5 +90,6 @@ def test_get_date_wrong_date() -> None:
     ],
 )
 def test_get_date_wrong_date_format(my_date: str) -> None:
+    """Tests date formating function with wrong non-ISO-standard dates format."""
     with pytest.raises(ValueError, match="Date should be in format YYYY-MM-DD"):
         get_date(my_date)
