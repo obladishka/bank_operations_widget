@@ -39,8 +39,7 @@ To see operations in ascending order, transmit a second parameter `parameter="Fa
    print(sort_by_date(operations_data)) # outputs operations in chronlogical order from the latest to the earliers
    print(sort_by_date(operations_data, parameter=False)) # outputs operations from the earliers to the latest
    ```
-   
-5. Module src/generators.py is created for data filtering nd generation. Create a list of dicts containing 
+5. Module src/generators.py is created for data filtering and generation. Create a list of dicts containing 
 full information of your operations including operation id, state, date, operationAmount and description, etc.
 Specify the currency of interest and transmit both parameters to filter_by_currency function. 
 Print out information of relevant operations one by one using `next()`.
@@ -81,6 +80,20 @@ specified range. To use it simply transmit the start and the end number of a car
    
    card_numbers_list = list(card_number for card_number in card_number_generator(1, 5))
    print(card_numbers_list) # outputs a list of card numbers from "0000 0000 0000 0001" to "0000 0000 0000 0005"
+   ```
+6. Module src/decorators.py contains function logging decorator that logs function start and end time, 
+execution result and errors information. To use it simply place decorator above your function and then run it. 
+If you want the logs to be written in a separate file, transmit a file name to decorator.
+   ```commandline
+   # logs are printed to the console
+   @log
+   def your_func():
+       ....
+   
+   # logs are written in a special file
+   @log("file.txt")
+   def your_func():
+       ....
    ```
 
 ## Usage
@@ -178,6 +191,18 @@ specified range. To use it simply transmit the start and the end number of a car
        0000 0000 0000 0023
        0000 0000 0000 0024
        0000 0000 0000 0025
+   ```
+7. Logging decorator:
+   ```commandline
+   # successful function execution
+   your_func start time: 2024-07-15 20:49:39.914280
+   your_func ok
+   your_func end time: 2024-07-15 20:49:40.914280
+   
+   # error log
+   your_func start time: 2024-07-15 20:49:39.914280
+   your_func error: Something went wrong!. Inputs: (), {}
+   your_func end time: 2024-07-15 20:49:39.914280
    ```
 
 ## Testing
