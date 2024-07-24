@@ -4,6 +4,7 @@ from src.generators import card_number_generator, filter_by_currency, transactio
 
 
 def test_filter_by_currency(transactions):
+    """Tests filter_by_currency function with different transmitted parameters."""
     usd_transactions = filter_by_currency(transactions, "USD")
     assert next(usd_transactions) == {
         "id": 939719570,
@@ -36,11 +37,13 @@ def test_filter_by_currency(transactions):
 
 
 def test_filter_by_currency_no_transactions(transactions):
+    """Tests filter_by_currency function with no transactions or no transactions in a chosen currency."""
     assert filter_by_currency(transactions, "EUR") == "No transactions in such currency"
     assert filter_by_currency([], "USD") == "No transactions in such currency"
 
 
 def test_filter_by_currency_no_currency():
+    """Tests filter_by_currency function when operations currency is missing."""
     no_currency_transactions = [
         {
             "id": 939719570,
@@ -69,6 +72,7 @@ def test_filter_by_currency_no_currency():
 
 
 def test_transaction_descriptions(transactions):
+    """Tests descriptions consecutive generation."""
     descriptions = transaction_descriptions(transactions)
     assert next(descriptions, "No more transactions") == "Перевод организации"
     assert next(descriptions, "No more transactions") == "Перевод со счета на счет"
@@ -81,10 +85,12 @@ def test_transaction_descriptions(transactions):
 
 
 def test_transaction_descriptions_no_transactions():
+    """Tests descriptions generator with no data about transactions."""
     assert next(transaction_descriptions([])) == "No transactions found"
 
 
 def test_transaction_descriptions_no_description():
+    """Tests descriptions generator when descriptions are missing."""
     no_description_transactions = [
         {
             "id": 939719570,
@@ -108,6 +114,7 @@ def test_transaction_descriptions_no_description():
 
 
 def test_card_number_generator():
+    """Tests cards numbers consecutive generation."""
     card_number = card_number_generator(1, 5)
     assert next(card_number) == "0000 0000 0000 0001"
     assert next(card_number) == "0000 0000 0000 0002"
@@ -172,11 +179,13 @@ def test_card_number_generator():
     ],
 )
 def test_card_number_generator_different_ranges(start, stop, expected):
+    """Tests cards numbers generation within different ranges."""
     result = list(card_number for card_number in card_number_generator(start, stop))
     assert result == expected
 
 
 def test_card_number_generator_extreme_numbers():
+    """Tests cards numbers generator with boundary conditions of a specified range."""
     assert next(card_number_generator(0, 1)) == "Range should be between 1 and 9999999999999999"
     assert next(card_number_generator(1, 10000000000000000)) == "Range should be between 1 and 9999999999999999"
     assert next(card_number_generator(1, 0)) == "Min range should be smaller than max range"

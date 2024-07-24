@@ -4,16 +4,19 @@ from src.masks import get_mask_account, get_mask_card_number
 
 
 def test_get_mask_card_number() -> None:
+    """Tests standard cards numbers masking."""
     assert get_mask_card_number(7000792289606361) == "7000 79** **** 6361"
     assert get_mask_card_number("7000792289606361") == "7000 79** **** 6361"
 
 
 def test_get_mask_card_number_no_number() -> None:
+    """Tests masking function when card number is missing."""
     assert get_mask_card_number("") == "Card number can't be empty"
 
 
 @pytest.mark.parametrize("card_number", [40128888188, 70007922896063610120])
 def test_get_mask_card_number_wrong_number(card_number: int) -> None:
+    """Tests masking function with wrong card numbers."""
     with pytest.raises(ValueError, match="Card number should be between 12 and 19 digits"):
         get_mask_card_number(card_number)
 
@@ -31,20 +34,24 @@ def test_get_mask_card_number_wrong_number(card_number: int) -> None:
     ],
 )
 def test_get_mask_card_number_nonstandard_number(card_number: int, expected: str) -> None:
+    """Tests non-standard cards numbers masking."""
     assert get_mask_card_number(card_number) == expected
 
 
 def test_get_mask_account() -> None:
+    """Tests standard accounts numbers masking."""
     assert get_mask_account(73654108430135874305) == "**4305"
     assert get_mask_account("73654108430135874305") == "**4305"
 
 
 def test_get_mask_account_no_number() -> None:
+    """Tests masking function when account number is missing."""
     assert get_mask_account("") == "Account number can't be empty"
 
 
 @pytest.mark.parametrize("account_number", [73654, 73654108430135874305123])
 def test_get_mask_account_wrong_number(account_number: int) -> None:
+    """Tests masking function with wrong account numbers."""
     with pytest.raises(ValueError, match="Account should be between 6 and 22 digits"):
         get_mask_account(account_number)
 
@@ -61,4 +68,5 @@ def test_get_mask_account_wrong_number(account_number: int) -> None:
     ],
 )
 def test_get_mask_account_nonstandard_number(account_number: int, expected: str) -> None:
+    """Tests non-standard accounts numbers masking."""
     assert get_mask_account(account_number) == expected

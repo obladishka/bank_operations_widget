@@ -35,6 +35,7 @@ from src.processing import filter_by_state, sort_by_date
 def test_filter_by_state(
     operations_data: list[dict[str, str | int]], state: None | str, expected: list[dict[str, str | int]]
 ) -> None:
+    """Tests filtering function with different states transmitted."""
     if state is None:
         filter_by_state(operations_data) == expected
     else:
@@ -42,10 +43,12 @@ def test_filter_by_state(
 
 
 def test_filter_by_state_wrong_state(operations_data: list[dict[str, str | int]]) -> None:
+    """Tests filtering function with wrong state."""
     assert filter_by_state(operations_data, state="PROCESSED") == "State is invalid"
 
 
 def test_filter_by_state_no_data() -> None:
+    """Tests filtering function with no data about transactions."""
     assert filter_by_state([]) == []
 
 
@@ -90,6 +93,7 @@ def test_filter_by_state_no_data() -> None:
 def test_sort_by_date(
     operations_data: list[dict[str, str | int]], parameter: bool, expected: list[dict[str, str | int]]
 ) -> None:
+    """Tests sorting function with different transmitted parameters."""
     if parameter is None:
         sort_by_date(operations_data) == expected
     else:
@@ -97,4 +101,5 @@ def test_sort_by_date(
 
 
 def test_sort_by_date_no_data() -> None:
+    """Tests sorting function with no data about transactions."""
     assert sort_by_date([]) == []
