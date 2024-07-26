@@ -14,6 +14,8 @@ def get_operations_data(file_path: str) -> list[dict]:
             except json.JSONDecodeError:
                 return []
             else:
+                if type(operations_data) is not list:
+                    return []
                 return operations_data
 
     except FileNotFoundError:
