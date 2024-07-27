@@ -95,6 +95,33 @@ If you want the logs to be written in a separate file, transmit a file name to d
    def your_func():
        ....
    ```
+7. Module src/utils.py contains functions for working with JSON-files. 
+Create a JSON-file with information about financial transactions and transmit a path to it to get_operations_data 
+function. The function will return a python object of list of dicts type where each dict refers to a transaction.
+You can now transmit any transaction to get_transaction_amount function to see the transaction amount in rubles. 
+If transaction is made in other currency, the amount is converted to rubles via Exchange Rates Data API.
+   ```commandline
+   transactions_list = get_operations_data("operation.json") # creates a list of all transactions in the file
+   
+   for transaction in transactions_list:
+      print(get_transaction_amount(transaction)) # prints value of each transaction in rubles
+   ```
+8. Module src/external_api.py is created to work with external services. To use the module first change the name of
+".env.example" file in the root of the project to ".env" and replace data in it with correct data (your API-token).
+After that you can call get_exchange_rate function either directly from src/external_api.py module 
+or by transmitting non-ruble transaction to get_transaction_amount function. 
+On default currency to which amount is converted is set to RUB, but you can change it whenever you want by transmitting
+the 3rd parameter to the function. The function returns a tuple with operation status and transaction amount in case
+operation was successful or with status and error message in case an error occurred.
+   ```commandline
+   # convert 120 USD to RUB
+   status, result = get_exchange_rate(120, "USD")
+   print(result)
+   
+   # convert 120 USD to EUR
+   status, result = get_exchange_rate(120, "USD", "EUR") # converts 120 USD to EUR
+   print(result)
+   ```
 
 ## Usage
 
@@ -203,6 +230,22 @@ If you want the logs to be written in a separate file, transmit a file name to d
    your_func start time: 2024-07-15 20:49:39.914280
    your_func error: Something went wrong!. Inputs: (), {}
    your_func end time: 2024-07-15 20:49:39.914280
+   ```
+8. Transaction amount calculating function:
+   ```commandline
+   file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "operations.json")
+   rub_transaction = get_transaction_amount(file_path)[0]
+   usd_transaction = get_transaction_amount(file_path)[1]
+   
+   print(get_transaction_amount(rub_transaction)) # returns 31957.58
+   
+   # successful conversion
+   print(get_transaction_amount(usd_transaction)) 
+   >>> 706814.75
+   
+   # unsuccessful conversion
+   print(get_transaction_amount(usd_transaction))
+   >>> None
    ```
 
 ## Testing
