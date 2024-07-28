@@ -1,5 +1,4 @@
 import json
-import os
 import tempfile
 from unittest.mock import patch
 
@@ -8,27 +7,29 @@ import pytest
 from src.utils import get_operations_data, get_transaction_amount
 
 
-def test_get_operations_data():
+@patch("src.utils.json.load")
+@patch("src.utils.open")
+def test_get_operations_data(mock_open, mock_json_load, transactions):
     """Tests normal work of get_operations_data function."""
-    file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "operations.json")
-    assert get_operations_data(file_path)[:2] == [
+    mock_json_load.return_value = transactions
+    assert get_operations_data("existing.json")[:2] == [
         {
-            "id": 441945886,
+            "id": 939719570,
             "state": "EXECUTED",
-            "date": "2019-08-26T10:50:58.294041",
-            "operationAmount": {"amount": "31957.58", "currency": {"name": "руб.", "code": "RUB"}},
+            "date": "2018-06-30T02:08:58.425572",
+            "operationAmount": {"amount": "9824.07", "currency": {"name": "USD", "code": "USD"}},
             "description": "Перевод организации",
-            "from": "Maestro 1596837868705199",
-            "to": "Счет 64686473678894779589",
+            "from": "Счет 75106830613657916952",
+            "to": "Счет 11776614605963066702",
         },
         {
-            "id": 41428829,
+            "id": 142264268,
             "state": "EXECUTED",
-            "date": "2019-07-03T18:35:29.512364",
-            "operationAmount": {"amount": "8221.37", "currency": {"name": "USD", "code": "USD"}},
-            "description": "Перевод организации",
-            "from": "MasterCard 7158300734726758",
-            "to": "Счет 35383033474447895560",
+            "date": "2019-04-04T23:20:05.206878",
+            "operationAmount": {"amount": "79114.93", "currency": {"name": "USD", "code": "USD"}},
+            "description": "Перевод со счета на счет",
+            "from": "Счет 19708645243227258542",
+            "to": "Счет 75651667383060284188",
         },
     ]
 
