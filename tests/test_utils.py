@@ -32,6 +32,7 @@ def test_get_operations_data(mock_open, mock_json_load, transactions):
             "to": "Счет 75651667383060284188",
         },
     ]
+    mock_open.assert_called_once_with("existing.json", "r", encoding="utf-8")
 
 
 def test_get_operations_data_no_such_file():
