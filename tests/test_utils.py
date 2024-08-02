@@ -4,15 +4,15 @@ from unittest.mock import patch
 
 import pytest
 
-from src.utils import get_operations_data, get_transaction_amount
+from src.utils import get_operations_data_from_json, get_transaction_amount
 
 
 @patch("src.utils.json.load")
 @patch("src.utils.open")
-def test_get_operations_data(mock_open, mock_json_load, transactions):
-    """Tests normal work of get_operations_data function."""
+def test_get_operations_data_from_json(mock_open, mock_json_load, transactions):
+    """Tests normal work of get_operations_data_from_json function."""
     mock_json_load.return_value = transactions
-    assert get_operations_data("existing.json")[:2] == [
+    assert get_operations_data_from_json("existing.json")[:2] == [
         {
             "id": 939719570,
             "state": "EXECUTED",
@@ -35,21 +35,21 @@ def test_get_operations_data(mock_open, mock_json_load, transactions):
     mock_open.assert_called_once_with("existing.json", "r", encoding="utf-8")
 
 
-def test_get_operations_data_no_such_file():
-    """Tests get_operations_data function when a JSON-file does not exist."""
+def test_get_operations_data_from_json_no_such_file():
+    """Tests get_operations_data_from_json function when a JSON-file does not exist."""
     file_name = "no_such_file.json"
-    assert get_operations_data(file_name) == []
+    assert get_operations_data_from_json(file_name) == []
 
 
-def test_get_operations_data_empty_file():
-    """Tests get_operations_data function when a JSON-file is empty."""
+def test_get_operations_data_from_json_empty_file():
+    """Tests get_operations_data_from_json function when a JSON-file is empty."""
     with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
         file_path = tmp_file.name
-    assert get_operations_data(file_path) == []
+    assert get_operations_data_from_json(file_path) == []
 
 
-def test_get_operations_data_not_a_list():
-    """Tests get_operations_data function when a JSON-file does not contain a list."""
+def test_get_operations_data_from_json_not_a_list():
+    """Tests get_operations_data_from_json function when a JSON-file does not contain a list."""
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as tmp_file:
         data = {
             "people": [
@@ -64,7 +64,7 @@ def test_get_operations_data_not_a_list():
         }
         json.dump(data, tmp_file)
         file_path = tmp_file.name
-    assert get_operations_data(file_path) == []
+    assert get_operations_data_from_json(file_path) == []
 
 
 def test_get_transaction_amount(transactions):
