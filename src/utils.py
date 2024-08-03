@@ -16,7 +16,7 @@ file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 
 
-def get_operations_data(file_path: str) -> list[dict]:
+def get_operations_data_from_json(file_path: str) -> list[dict]:
     """Function that returns info about financial transactions from JSON-file."""
     try:
         logger.info(f"Trying to open a file {file_path}")

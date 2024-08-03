@@ -1,3 +1,5 @@
+import numpy as np
+import pandas as pd
 import pytest
 
 
@@ -86,3 +88,20 @@ def transactions() -> list[dict[str, str | int]]:
             "to": "Счет 14211924144426031657",
         },
     ]
+
+
+@pytest.fixture
+def get_df() -> pd.DataFrame:
+    data = {
+        "id": [650703, 5380041],
+        "state": ["EXECUTED", "CANCELED"],
+        "date": ["2023-09-05T11:30:32Z", "2021-02-01T11:54:58Z"],
+        "amount": [16210, 23789],
+        "currency_name": ["Sol", "Peso"],
+        "currency_code": ["PEN", "UYU"],
+        "from": ["Счет 58803664561298323391", np.nan],
+        "to": ["Счет 39745660563456619397", "Счет 23294994494356835683"],
+        "description": ["Перевод организации", "Открытие вклада"],
+    }
+
+    return pd.DataFrame(data)

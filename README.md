@@ -96,12 +96,12 @@ If you want the logs to be written in a separate file, transmit a file name to d
        ....
    ```
 7. Module src/utils.py contains functions for working with JSON-files. 
-Create a JSON-file with information about financial transactions and transmit a path to it to get_operations_data 
+Create a JSON-file with information about financial transactions and transmit a path to it to get_operations_data_from_json 
 function. The function will return a python object of list of dicts type where each dict refers to a transaction.
 You can now transmit any transaction to get_transaction_amount function to see the transaction amount in rubles. 
 If transaction is made in other currency, the amount is converted to rubles via Exchange Rates Data API.
    ```commandline
-   transactions_list = get_operations_data("operation.json") # creates a list of all transactions in the file
+   transactions_list = get_operations_data_from_json("operation.json") # creates a list of all transactions in the file
    
    for transaction in transactions_list:
       print(get_transaction_amount(transaction)) # prints value of each transaction in rubles
@@ -121,6 +121,16 @@ operation was successful or with status and error message in case an error occur
    # convert 120 USD to EUR
    status, result = get_exchange_rate(120, "USD", "EUR") # converts 120 USD to EUR
    print(result)
+   ```
+9. Module src/read_from_file.py contains functions for working with CSV and Excel-files. 
+They first read transmitted files and then transform the information and output it in the format same to that of
+get_operations_data_from_json function.
+   ```commandline
+   # get a list of all transactions in the CSV-file
+   transactions = get_operations_data_from_csv("transactions.csv")
+   
+   # get a list of all transactions in the Excel-file
+   transactions = get_operations_data_from_excel("transactions.xlsx")
    ```
 
 ## Usage
