@@ -1,6 +1,6 @@
 import pytest
 
-from src.processing import filter_by_state, search_by_srt, sort_by_date
+from src.processing import analyze_categories, filter_by_state, search_by_srt, sort_by_date
 
 
 @pytest.mark.parametrize(
@@ -143,3 +143,42 @@ def test_search_by_srt_no_description():
         },
     ]
     assert search_by_srt(data, "Перевод организации") == []
+
+
+def test_analyze_categories(transactions):
+    """Tests normal work of analyze_categories function."""
+    categories_list = [
+        "Перевод со счета на счет",
+        "Перевод организации",
+        "Перевод с карты на карту",
+        "Открытие вклада",
+    ]
+    assert analyze_categories(transactions, categories_list) == {
+        "Перевод со счета на счет": 2,
+        "Перевод организации": 2,
+        "Перевод с карты на карту": 1,
+        "Открытие вклада": 1,
+    }
+
+
+def test_analyze_categories_no_such_category(transactions):
+    """Tests analyze_categories function when category is not found."""
+    assert analyze_categories(transactions, ["Not existing category"]) == {"Not existing category": 0}
+
+
+def test_analyze_categories_no_descriptions():
+    """Tests analyze_categories function when transaction has no description."""
+    data = [
+        {
+            "id": 594226727,
+            "state": "CANCELED",
+            "date": "2018-09-12T21:27:25.241689",
+            "operationAmount": {"amount": "67314.70", "currency": {"name": "руб.", "code": "RUB"}},
+            "from": "Visa Platinum 1246377376343588",
+            "to": "Счет 14211924144426031657",
+        },
+    ]
+    assert analyze_categories(data, ["Перевод организации", "Перевод с карты на карту"]) == {
+        "Перевод организации": 0,
+        "Перевод с карты на карту": 0,
+    }
