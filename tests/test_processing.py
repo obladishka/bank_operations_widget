@@ -1,6 +1,6 @@
 import pytest
 
-from src.processing import filter_by_state, sort_by_date
+from src.processing import filter_by_state, search_by_srt, sort_by_date
 
 
 @pytest.mark.parametrize(
@@ -103,3 +103,43 @@ def test_sort_by_date(
 def test_sort_by_date_no_data() -> None:
     """Tests sorting function with no data about transactions."""
     assert sort_by_date([]) == []
+
+
+@pytest.mark.parametrize(
+    "search_str, transaction_index, number_of_transactions",
+    [
+        ("Перевод", 0, 5),
+        ("Переводить", 0, 5),
+        ("Перевести", 0, 5),
+        ("перев", 0, 5),
+        ("карта", 3, 1),
+        ("открыть", 5, 1),
+        ("открывать", 5, 1),
+        ("Орг", 0, 2),
+        ("со счета", 1, 2),
+    ],
+)
+def test_search_by_srt(transactions, search_str, transaction_index, number_of_transactions):
+    """Tests search_by_srt function with different strings for searching."""
+    assert search_by_srt(transactions, search_str)[0] == transactions[transaction_index]
+    assert len(search_by_srt(transactions, search_str)) == number_of_transactions
+
+
+def test_search_by_srt_no_such_transactions(transactions):
+    """Tests search_by_srt function when no transaction is found."""
+    assert search_by_srt(transactions, "not existing word in description") == []
+
+
+def test_search_by_srt_no_description():
+    """Tests search_by_srt function when transaction has no description."""
+    data = [
+        {
+            "id": 594226727,
+            "state": "CANCELED",
+            "date": "2018-09-12T21:27:25.241689",
+            "operationAmount": {"amount": "67314.70", "currency": {"name": "руб.", "code": "RUB"}},
+            "from": "Visa Platinum 1246377376343588",
+            "to": "Счет 14211924144426031657",
+        },
+    ]
+    assert search_by_srt(data, "Перевод организации") == []

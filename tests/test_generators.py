@@ -79,7 +79,7 @@ def test_transaction_descriptions(transactions):
     assert next(descriptions, "No more transactions") == "Перевод со счета на счет"
     assert next(descriptions, "No more transactions") == "Перевод с карты на карту"
     assert next(descriptions, "No more transactions") == "Перевод организации"
-    assert next(descriptions, "No more transactions") == "Перевод организации"
+    assert next(descriptions, "No more transactions") == "Открытие вклада"
     assert next(descriptions, "No more transactions") == "Operation description is not defined"
     assert next(descriptions, "No more transactions") == "No more transactions"
 
