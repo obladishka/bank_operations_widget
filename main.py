@@ -1,7 +1,7 @@
 import importlib
 import os
 
-from src.generators import filter_by_currency
+from src.generators import filter_by_currency, transaction_descriptions
 from src.processing import filter_by_state, search_by_srt, sort_by_date
 from src.widget import get_date, mask_account_card
 
@@ -86,10 +86,11 @@ def main():
         print("\nНе найдено ни одной транзакции, подходящей под ваши условия фильтрации")
     else:
         print(f"\nВсего банковских операций в выборке: {len(filtered_transactions)}\n")
+        descriptions = transaction_descriptions(filtered_transactions)
 
         for transaction in filtered_transactions:
             date = get_date(transaction.get("date"))
-            description = transaction.get("description")
+            description = next(descriptions)
             to_card = mask_account_card(transaction.get("to"))
             amount = " ".join(
                 [
