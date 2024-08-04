@@ -31,11 +31,11 @@ def sort_by_date(operations_data: list[dict[str, str | int]], parameter: bool = 
 
 def search_by_srt(operations_data: list[dict], search_str: str) -> list[dict]:
     """Function that filters transaction by a specified word in description."""
-    pattern = rf"{re.escape(search_str)}?.*"
+    pattern = rf"{re.escape(re.sub(r"ть|сти|вать", "", search_str))}?.*"
     return [
         operation
         for operation in operations_data
-        if re.search(pattern, operation.get("description"), flags=re.IGNORECASE)
+        if re.search(pattern, operation.get("description", ""), flags=re.IGNORECASE)
     ]
 
 
