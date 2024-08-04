@@ -1,4 +1,5 @@
 import re
+from collections import Counter
 from datetime import datetime
 
 
@@ -36,3 +37,15 @@ def search_by_srt(operations_data: list[dict], search_str: str) -> list[dict]:
         for operation in operations_data
         if re.search(pattern, operation.get("description"), flags=re.IGNORECASE)
     ]
+
+
+def analyze_categories(operations_data: list[dict], categories_list: list[str]) -> dict:
+    """Function that counts number of transactions of each category."""
+    descriptions_list = [operation.get("description") for operation in operations_data]
+    descriptions_count = Counter(descriptions_list)
+    result = {}
+
+    for category in categories_list:
+        result[category] = descriptions_count.get(category, 0)
+
+    return result
