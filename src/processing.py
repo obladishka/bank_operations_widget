@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 
@@ -25,3 +26,13 @@ def sort_by_date(operations_data: list[dict[str, str | int]], parameter: bool = 
                 operations_data.pop(index)
                 print(f"Operation {info.get("id")} date should be in format YYYY-MM-DD")
     return sorted(operations_data, key=lambda date: date["date"], reverse=parameter)
+
+
+def search_by_srt(operations_data: list[dict], search_str: str) -> list[dict]:
+    """Function that filters transaction by a specified word in description."""
+    pattern = rf"{re.escape(search_str)}?.*"
+    return [
+        operation
+        for operation in operations_data
+        if re.search(pattern, operation.get("description"), flags=re.IGNORECASE)
+    ]
