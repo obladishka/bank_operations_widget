@@ -23,10 +23,14 @@ Don't forget to print out the result:
     your_account = "Счет account_number"
     print(mask_account_card("your account"))
     ```
-4. Go to src/processing.py and create a list of dicts containing information of your latest operations in a form of
-`{"id": operation_id, "state": "EXECUTED"/"CANCELED", "date": "operation_date"}`. 
+4. Go to src/processing.py and create a list of dicts containing information of your latest transactions. 
 Transmit this data to a filter_by_state function to see only "EXECUTED" operations 
-or specify the filtering state by transmitting second parameter `state="CANCELED"`. 
+or specify the filtering state by transmitting second parameter `state="CANCELED"`.
+To find only transactions of a specific category call a search_by_srt function and transmit a transactions list
+as well as word for searching to it. The function will return a list of all transactions containing this word in 
+their description. 
+Analyze_categories function takes a transactions list and a list of categories of interest, calculates number of 
+transactions for each category and returns this information in form of dictionary.
 Call a sort_by_date function to see your operations in descending chronological order (from the latest to the earliest).
 To see operations in ascending order, transmit a second parameter `parameter="False"`
    ```commandline
@@ -256,6 +260,73 @@ get_operations_data_from_json function.
    # unsuccessful conversion
    print(get_transaction_amount(usd_transaction))
    >>> None
+   ```
+9. Searching function:
+   ```commandline
+   transactions = [
+        {
+            "id": 939719570,
+            "state": "EXECUTED",
+            "date": "2018-06-30T02:08:58.425572",
+            "operationAmount": {"amount": "9824.07", "currency": {"name": "USD", "code": "USD"}},
+            "description": "Перевод организации",
+            "from": "Счет 75106830613657916952",
+            "to": "Счет 11776614605963066702",
+        },
+        {
+            "id": 142264268,
+            "state": "EXECUTED",
+            "date": "2019-04-04T23:20:05.206878",
+            "operationAmount": {"amount": "79114.93", "currency": {"name": "USD", "code": "USD"}},
+            "description": "Перевод со счета на счет",
+            "from": "Счет 19708645243227258542",
+            "to": "Счет 75651667383060284188",
+        },
+        {
+            "id": 895315941,
+            "state": "EXECUTED",
+            "date": "2018-08-19T04:27:37.904916",
+            "operationAmount": {"amount": "56883.54", "currency": {"name": "USD", "code": "USD"}},
+            "description": "Перевод с карты на карту",
+            "from": "Visa Classic 6831982476737658",
+            "to": "Visa Platinum 8990922113665229",
+        },
+        {
+            "id": 594226727,
+            "state": "CANCELED",
+            "date": "2018-09-12T21:27:25.241689",
+            "operationAmount": {"amount": "67314.70", "currency": {"name": "руб.",},},
+            "description": "Открытие вклада",
+            "to": "Счет 14211924144426031657",
+        },
+    ]
+   print(search_by_srt(transactions, "вкл"))
+   >>> [{
+            "id": 594226727,
+            "state": "CANCELED",
+            "date": "2018-09-12T21:27:25.241689",
+            "operationAmount": {"amount": "67314.70", "currency": {"name": "руб.",},},
+            "description": "Открытие вклада",
+            "to": "Счет 14211924144426031657",
+        }]
+   ```
+10. Analyzing function:
+   ```commandline
+   categories_list = categories_list = [
+        "Перевод со счета на счет",
+        "Перевод организации",
+        "Перевод с карты на карту",
+        "Открытие вклада",
+        "Перевод с карты на счет",
+    ]
+    print(analyze_categories(transactions, categories_list)
+    >>> {
+        "Перевод со счета на счет" : 1,
+        "Перевод организации": 1,
+        "Перевод с карты на карту": 1,
+        "Открытие вклада": 1,
+        "Перевод с карты на счет": 0,
+    }
    ```
 
 ## Testing
