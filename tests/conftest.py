@@ -75,8 +75,7 @@ def transactions() -> list[dict[str, str | int]]:
                     "name": "руб.",
                 },
             },
-            "description": "Перевод организации",
-            "from": "Visa Platinum 1246377376343588",
+            "description": "Открытие вклада",
             "to": "Счет 14211924144426031657",
         },
         {
